@@ -73,7 +73,23 @@ def majorityCnt(dataSet):
     sortclassCnt=sorted(classCount.items(),key=lambda a:a[1],reverse=True)
     return sortclassCnt[0][0]
 
+def createTree(dataSet,labels):
+    categries=[ex[-1] for ex in dataSet]
+    if len(set(categries))==1:
+        return categries[0]
+    if len(dataSet[0])==1:
+        return majorityCnt(dataSet)
 
+    bestFeature=chooseBestFeature(dataSet)
+    mytree={labels[bestFeature]:{}}
+
+    bFeatRang=set([ex[bestFeature] for ex in dataSet])
+    for a in bFeatRang:
+        sublabels=labels[:bestFeature]+labels[bestFeature+1:]
+        subDataSet=splitDataSet(dataSet,bestFeature,a)
+        mytree[labels[bestFeature]][a]=createTree(subDataSet,sublabels)
+
+    return mytree
 
 if __name__=='__main__':
      dataSet,labels=createDateSet()
@@ -82,3 +98,4 @@ if __name__=='__main__':
      bestFeature=chooseBestFeature(dataSet)
      c=majorityCnt(dataSet)
      print(reDataSet)
+     print(createTree(dataSet,labels))
