@@ -91,6 +91,14 @@ def createTree(dataSet,labels):
 
     return mytree
 
+
+def classify(inpTree,labels,feaVec):
+    firstFeature=inpTree.keys()[0]
+    indexFea=labels.index(firstFeature)
+    secTree=inpTree[firstFeature]
+    secTree[feaVec[indexFea]]
+
+
 if __name__=='__main__':
      dataSet,labels=createDateSet()
      shannonEnt=calculateShannonEnt(dataSet)
