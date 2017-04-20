@@ -93,11 +93,37 @@ def createTree(dataSet,labels):
 
 
 def classify(inpTree,labels,feaVec):
-    firstFeature=inpTree.keys()[0]
+    firstFeature=list(inpTree.keys())[0]
     indexFea=labels.index(firstFeature)
     secTree=inpTree[firstFeature]
-    secTree[feaVec[indexFea]]
+    for a in secTree.keys():
+        if feaVec[indexFea]==a:
+            if type(secTree[a]).__name__=='dict':
+                classLabel=classify(secTree[a],labels,feaVec)
+            else:
+                classLabel=secTree[a]
+    return classLabel
 
+#序列化储存决策树
+
+def storeTree(inputTree,filename):
+    import pickle
+    fw=open(filename,'wb')
+    pickle.dump(inputTree,fw)
+    fw.close()
+
+def grabTree(filename):
+    import pickle
+    fr=open(filename,'rb')
+    return pickle.load(fr)
+
+#读文件代码
+#labels=['age','prescript','astigmatic','tearRate']
+def loadData(filename):
+    fr=open(filename)
+    lis=[ir.strip().split('\t') for ir in fr.readlines()]
+    labels=[inr[-1] for inr in lis]
+    return lis
 
 if __name__=='__main__':
      dataSet,labels=createDateSet()
@@ -105,5 +131,9 @@ if __name__=='__main__':
      reDataSet=splitDataSet(dataSet,0,1)
      bestFeature=chooseBestFeature(dataSet)
      c=majorityCnt(dataSet)
+     mytree=createTree(dataSet,labels)
+     storeTree(mytree,'mydecison_tree.pkl')
+     stmytree=grabTree('mydecison_tree.pkl')
      print(reDataSet)
      print(createTree(dataSet,labels))
+     print(classify(mytree,labels,[1,1]))
