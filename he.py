@@ -208,6 +208,28 @@ def BatchEMforMixGaussian(InputData, K, MaxIter):
     return pi_Cof, UK, List_cov, rZnk
 
 data=pd.read_csv(filepath_or_buffer='西瓜数据集4-0.csv',sep=',')[['密度','含糖率']].values
-a,b,c,d=BatchEMforMixGaussian(data.T,3,40)
+a,b,c,d=BatchEMforMixGaussian(data.T,3,100)
 #EMforMixGaussian(data.T,3)
 print(d)
+import matplotlib.pyplot as plt
+import numpy as np
+y=np.argmax(d,axis=1)
+X1=[]
+X2=[]
+X3=[]
+for a,b in zip(data,y):
+    if b==0:
+        X1.append(a)
+    elif b==1:
+        X2.append(a)
+    else:
+        X3.append(a)
+
+plt.figure(1)
+X1=np.array(X1)
+X2=np.array(X2)
+X3=np.array(X3)
+plt.scatter(X1[:,0],X1[:,1],color='r')
+plt.scatter(X2[:,0],X2[:,1],color='b')
+plt.scatter(X3[:,0],X3[:,1],color='g')
+plt.show()
